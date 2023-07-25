@@ -29,11 +29,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   late final Future<ExampleAnimationController> init;
-  final RenderController renderController =
-      RenderController(logLevel: LogLevel.debug);
+  final RenderController renderController = RenderController(logLevel: LogLevel.debug);
 
   @override
   void initState() {
@@ -53,8 +51,7 @@ class _MyHomePageState extends State<MyHomePage>
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
+          } else if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
             final functionController = snapshot.data!;
             return Center(
               child: Column(
@@ -79,12 +76,12 @@ class _MyHomePageState extends State<MyHomePage>
                           simultaneousCaptureHandlers: 6,
                         ),
                         logInConsole: true,
-                        format: Mp4Format(audio: [
-                          RenderAudio.url(
-                            Uri.parse(
-                                "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"),
-                          ),
-                          /*
+                        format: const Mp4Format(
+                            // audio: [
+                            //   RenderAudio.url(
+                            //     Uri.parse("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"),
+                            //   ),
+                            /*
                           RenderAudio.url(
                             Uri.parse(
                                 "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
@@ -92,13 +89,13 @@ class _MyHomePageState extends State<MyHomePage>
                             endTime: 45.4365,
                           ),
                            */
-                        ]),
+                            // ],
+                            ),
                       );
                       setState(() {
                         functionController.attach(stream);
                       });
-                      final result = await stream.firstWhere(
-                          (event) => event.isResult || event.isFatalError);
+                      final result = await stream.firstWhere((event) => event.isResult || event.isFatalError);
                       if (result.isFatalError) return;
                       displayResult(result as RenderResult);
                     },
@@ -129,8 +126,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  Future<void> displayResult(RenderResult result,
-      [bool saveToGallery = false]) async {
+  Future<void> displayResult(RenderResult result, [bool saveToGallery = false]) async {
     print("file exits: ${await result.output.exists()}");
     if (mounted) {
       showDialog(
@@ -142,8 +138,7 @@ class _MyHomePageState extends State<MyHomePage>
       );
     }
     if (saveToGallery) {
-      GallerySaver.saveImage(result.output.path)
-          .then((value) => print("saved export to gallery"));
+      GallerySaver.saveImage(result.output.path).then((value) => print("saved export to gallery"));
     }
   }
 }
