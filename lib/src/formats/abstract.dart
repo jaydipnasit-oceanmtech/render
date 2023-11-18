@@ -137,11 +137,13 @@ abstract class MotionFormat extends RenderFormat {
       "[0:v]${scalingFilter != null ? "$scalingFilter," : ""}"
           "setpts=N/($frameRate*TB)[v]$mergeAudiosList",
       overwriteAudioExecution,
-      "-y",
+      '-c:v',
+      'libx264',
       '-crf',
       '23',
-      "-r",
-      "24",
+      '-r',
+      '25',
+      "-y",
       outputPath, // write output file
     ]);
   }
@@ -179,8 +181,6 @@ abstract class ImageFormat extends RenderFormat {
       "-i", inputPath, // input image
       scalingFilter != null ? "-vf??$scalingFilter" : null,
       "-vframes", "1", // indicate that there is only one frame
-      '-crf',
-      '23',
       "-r",
       "24",
       outputPath,
