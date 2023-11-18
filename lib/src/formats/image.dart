@@ -101,9 +101,12 @@ class BmpFormat extends ImageFormat {
       "-pix_fmt", "bgra",
       scalingFilter != null ? "-vf??$scalingFilter" : null,
       "-vframes", "1", // indicate that there is only one frame
-
-      "-r",
-      "24",
+      '-c:v',
+      'libx264',
+      '-crf',
+      '23',
+      '-r',
+      '25',
       outputPath,
     ]);
   }
