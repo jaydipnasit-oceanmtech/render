@@ -78,8 +78,7 @@ abstract class RenderFormat {
 
   /// Scaling ffmpeg filter with appropriate interpolation integration
   /// While maintaing aspect ratio
-  String? get scalingFilter =>
-      scale != null ? "scale=w=${scale!.w}:-1:${interpolation.name}" : null;
+  String? get scalingFilter => scale != null ? "scale=w=${scale!.w}:-1:${interpolation.name}" : null;
 
   bool get isMotion => this is MotionFormat;
 
@@ -118,13 +117,8 @@ abstract class MotionFormat extends RenderFormat {
   /// Default motion processor. This can be override, if more/other settings are
   /// needed.
   @override
-  FFmpegRenderOperation processor(
-      {required String inputPath,
-      required String outputPath,
-      required double frameRate}) {
-    final audioInput = audio != null && audio!.isNotEmpty
-        ? audio!.map((e) => "-i??${e.path}").join('??')
-        : null;
+  FFmpegRenderOperation processor({required String inputPath, required String outputPath, required double frameRate}) {
+    final audioInput = audio != null && audio!.isNotEmpty ? audio!.map((e) => "-i??${e.path}").join('??') : null;
     final mergeAudiosList = audio != null && audio!.isNotEmpty
         ? ";${List.generate(audio!.length, (index) => "[${index + 1}:a]" // list audio
                 "atrim=start=${audio![index].startTime}" // start time of audio
@@ -132,11 +126,10 @@ abstract class MotionFormat extends RenderFormat {
             "${List.generate(audio!.length, (index) => "[a${index + 1}]").join()}" // list audio
             "amix=inputs=${audio!.length}[a]" // merge audios
         : "";
-    final overwriteAudioExecution =
-        audio != null && audio!.isNotEmpty // merge audios with existing (none)
-            ? "-map??[v]??-map??[a]??-c:v??libx264??-c:a??"
-                "aac??-shortest??-pix_fmt??yuv420p??-vsync??2"
-            : "-map??[v]??-pix_fmt??yuv420p";
+    final overwriteAudioExecution = audio != null && audio!.isNotEmpty // merge audios with existing (none)
+        ? "-map??[v]??-map??[a]??-c:v??libx264??-c:a??"
+            "aac??-shortest??-pix_fmt??yuv420p??-vsync??2"
+        : "-map??[v]??-pix_fmt??yuv420p";
     return FFmpegRenderOperation([
       "-i", inputPath, // retrieve  captures
       audioInput,
@@ -145,6 +138,8 @@ abstract class MotionFormat extends RenderFormat {
           "setpts=N/($frameRate*TB)[v]$mergeAudiosList",
       overwriteAudioExecution,
       "-y",
+      "-r",
+      "24",
       outputPath, // write output file
     ]);
   }
@@ -176,15 +171,14 @@ abstract class ImageFormat extends RenderFormat {
   /// Default image processor. This can be override, if more settings are
   /// needed.
   @override
-  FFmpegRenderOperation processor(
-      {required String inputPath,
-      required String outputPath,
-      required double frameRate}) {
+  FFmpegRenderOperation processor({required String inputPath, required String outputPath, required double frameRate}) {
     return FFmpegRenderOperation([
       "-y",
       "-i", inputPath, // input image
       scalingFilter != null ? "-vf??$scalingFilter" : null,
       "-vframes", "1", // indicate that there is only one frame
+      "-r",
+      "24",
       outputPath,
     ]);
   }

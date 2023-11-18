@@ -94,16 +94,15 @@ class BmpFormat extends ImageFormat {
   }
 
   @override
-  FFmpegRenderOperation processor(
-      {required String inputPath,
-      required String outputPath,
-      required double frameRate}) {
+  FFmpegRenderOperation processor({required String inputPath, required String outputPath, required double frameRate}) {
     return FFmpegRenderOperation([
       "-y",
       "-i", inputPath, // input image
       "-pix_fmt", "bgra",
       scalingFilter != null ? "-vf??$scalingFilter" : null,
       "-vframes", "1", // indicate that there is only one frame
+      "-r",
+      "24",
       outputPath,
     ]);
   }
