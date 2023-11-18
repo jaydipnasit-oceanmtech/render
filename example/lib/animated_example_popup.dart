@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:render/render.dart';
 import 'package:video_player/video_player.dart';
@@ -27,8 +29,7 @@ class AnimatedExamplePopUp extends StatelessWidget {
             }(), builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.data != null) {
+              } else if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
                 return Column(
                   children: [
                     Expanded(
