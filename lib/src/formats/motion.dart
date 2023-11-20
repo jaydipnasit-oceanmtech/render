@@ -101,12 +101,6 @@ class GifFormat extends MotionFormat {
               " [0:v][palette] paletteuse"
           : "-filter:v??setpts=N/($frameRate*TB)",
       loop ? "-loop??0" : "-loop??-1",
-      '-c:v',
-      'libx264',
-      '-crf',
-      '23',
-      '-r',
-      '25',
       outputPath, // write output file
     ]);
   }
