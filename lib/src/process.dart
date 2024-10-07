@@ -54,7 +54,7 @@ abstract class RenderProcessor<T extends RenderFormat> {
   /// Wrapper around the FFmpeg command execution. Takes care of notifying the
   /// session about the progress of execution.
   Future<void> _executeCommand(List<String> command, {required double progressShare}) async {
-    print("Commands" + command.toString());
+    print("Commands $command");
 
     final ffmpegSession = await FFmpegSession.create(
       command,
@@ -74,7 +74,7 @@ abstract class RenderProcessor<T extends RenderFormat> {
       },
       (Log log) {
         final message = log.getMessage();
-        print("messagemessage : " + message.toString());
+        print("messagemessage : $message");
         if (message.toLowerCase().contains("error")) {
           session.recordError(RenderException(
             "[Ffmpeg execution error] $message",
