@@ -8,13 +8,14 @@ environment:
   flutter: '>=3.7.0-1.4.pre'
 
 dependencies:
-  ffmpeg_kit_flutter_minimal: ^6.0.8 
+  # ffmpeg_kit_16kb: ^6.0.8 
   provider: ^6.0.5
   flutter:
     sdk: flutter
   path_provider: ^2.0.15
   rich_console: ^1.0.4
   uuid: ^4.1.0
+  ffmpeg_kit_16kb: ^1.0.4
 
 dev_dependencies:
   flutter_test:
