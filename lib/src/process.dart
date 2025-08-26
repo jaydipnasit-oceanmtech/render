@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:ffmpeg_kit_flutter_new_min/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_flutter_new_min/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_flutter_new_min/log.dart';
-import 'package:ffmpeg_kit_flutter_new_min/statistics.dart';
+import 'package:ffmpeg_kit_flutter_new_min_gpl/ffmpeg_kit_config.dart';
+import 'package:ffmpeg_kit_flutter_new_min_gpl/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_new_min_gpl/log.dart';
+import 'package:ffmpeg_kit_flutter_new_min_gpl/statistics.dart';
 import 'package:render/src/formats/abstract.dart';
 import 'package:render/src/service/notifier.dart';
 import 'package:render/src/service/session.dart';
@@ -44,10 +44,7 @@ abstract class RenderProcessor<T extends RenderFormat> {
       outputPath: mainOutputFile.path,
       frameRate: session.settings.realFrameRate,
     );
-    await _executeCommand(
-      operation.arguments,
-      progressShare: progressShare,
-    );
+    await _executeCommand(operation.arguments, progressShare: progressShare);
     return mainOutputFile;
   }
 
@@ -63,7 +60,8 @@ abstract class RenderProcessor<T extends RenderFormat> {
           RenderState.processing,
           progressShare,
           message: "Completed ffmpeg operation",
-          details: "[async notification] Ffmpeg session completed: "
+          details:
+              "[async notification] Ffmpeg session completed: "
               "${ffmpegSession.getSessionId()}, time needed: "
               "${await ffmpegSession.getDuration()}, execution: "
               "${ffmpegSession.getCommand()}, logs: "
@@ -76,10 +74,7 @@ abstract class RenderProcessor<T extends RenderFormat> {
         final message = log.getMessage();
         print("messagemessage : $message");
         if (message.toLowerCase().contains("error")) {
-          session.recordError(RenderException(
-            "[Ffmpeg execution error] $message",
-            fatal: true,
-          ));
+          session.recordError(RenderException("[Ffmpeg execution error] $message", fatal: true));
         } else {
           session.recordLog(message);
         }
@@ -87,22 +82,13 @@ abstract class RenderProcessor<T extends RenderFormat> {
       (Statistics statistics) {
         final progression =
             ((statistics.getTime() * 100) ~/ session.settings.capturingDuration.inMilliseconds).clamp(0, 100) / 100;
-        session.recordActivity(
-          RenderState.processing,
-          progression.toDouble(),
-          message: "Converting captures",
-        );
+        session.recordActivity(RenderState.processing, progression.toDouble(), message: "Converting captures");
       },
     );
     await FFmpegKitConfig.ffmpegExecute(ffmpegSession).timeout(
       session.settings.processTimeout,
       onTimeout: () {
-        session.recordError(
-          const RenderException(
-            "Processing session timeout",
-            fatal: true,
-          ),
-        );
+        session.recordError(const RenderException("Processing session timeout", fatal: true));
         ffmpegSession.cancel();
       },
     );
